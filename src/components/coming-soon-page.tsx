@@ -1,4 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Bezel } from "@/components/calc/bezel";
+import { Eyebrow } from "@/components/calc/eyebrow";
 
 interface ComingSoonPageProps {
   title: string;
@@ -8,19 +9,22 @@ interface ComingSoonPageProps {
 
 export function ComingSoonPage({ title, description, message }: ComingSoonPageProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        <p className="mt-2 text-muted-foreground">{description}</p>
+        <Eyebrow>{title}</Eyebrow>
+        <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
+          {title}
+        </h1>
+        <p className="mt-2 text-espresso/60">{description}</p>
       </div>
-      <Card>
-        <CardContent className="flex min-h-[400px] items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg font-medium text-muted-foreground">Coming Soon</p>
-            <p className="mt-1 text-sm text-muted-foreground">{message}</p>
-          </div>
-        </CardContent>
-      </Card>
+      <Bezel innerClassName="flex min-h-[400px] items-center justify-center rounded-[1.4rem]">
+        <div className="text-center">
+          <p className="font-[family-name:var(--font-display)] text-2xl font-semibold text-espresso">
+            Coming Soon
+          </p>
+          <p className="mt-2 text-sm text-espresso/55">{message}</p>
+        </div>
+      </Bezel>
     </div>
   );
 }
