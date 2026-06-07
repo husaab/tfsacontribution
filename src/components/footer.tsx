@@ -7,11 +7,17 @@ const navLinks = [
   { href: "/rrsp", label: "RRSP Contribution" },
 ];
 
+const companyLinks = [
+  { href: "/about", label: "About" },
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/disclaimer", label: "Disclaimer" },
+];
+
 export function Footer() {
   return (
     <footer className="relative z-[2] mt-20 w-full bg-gradient-to-b from-espresso to-ink text-cream">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Navigation */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-widest text-cream/45">
@@ -44,6 +50,24 @@ export function Footer() {
                 info@tfsacontribution.com
               </a>
             </div>
+          </div>
+
+          {/* Company / legal */}
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-cream/45">
+              Company
+            </h3>
+            <nav className="mt-4 flex flex-col gap-2.5" aria-label="Company navigation">
+              {companyLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-cream/70 transition-colors hover:text-cream"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
           </div>
 
           {/* About blurb */}
