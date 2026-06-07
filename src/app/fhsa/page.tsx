@@ -10,22 +10,12 @@ export const metadata: Metadata = {
 
 export default function FHSAPage() {
   return (
-    <div className="space-y-10">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          FHSA Contribution Room
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          Find out how much you can contribute to your First Home Savings
-          Account.
-        </p>
-      </div>
-
+    <div className="space-y-14">
       <FHSACalculator />
 
       <section>
-        <h2 className="mb-6 text-2xl font-semibold tracking-tight">
-          Understanding Your FHSA
+        <h2 className="mb-6 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-espresso">
+          Understanding your FHSA
         </h2>
         <FHSAEducation />
       </section>
