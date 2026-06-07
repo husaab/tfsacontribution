@@ -15,7 +15,10 @@ import { ResultsHero } from "@/components/calc/results-hero";
 import { RoomDonut } from "@/components/calc/room-donut";
 import { RangeField } from "@/components/calc/range-field";
 import { Bezel } from "@/components/calc/bezel";
+import { CalculatorShell } from "@/components/calc/calculator-shell";
+import { toast } from "@/components/ui/sonner";
 import { formatCurrency } from "@/lib/format";
+import { flexMessage } from "@/lib/flex";
 import {
   type TFSAMode,
   ASSUMED_NEXT_YEAR_LIMIT,
@@ -29,6 +32,8 @@ export function TFSACalculator() {
   const [mode, setMode] = useState<TFSAMode>("birth");
   const [yearValue, setYearValue] = useState(1991);
   const [totalContributions, setTotalContributions] = useState(0);
+  const [portfolioValue, setPortfolioValue] = useState(0);
+  const [portfolioCap, setPortfolioCap] = useState(200000);
   const [withdrawalsBefore2026, setWithdrawalsBefore2026] = useState(0);
   const [withdrawalsIn2026, setWithdrawalsIn2026] = useState(0);
 
@@ -45,12 +50,15 @@ export function TFSACalculator() {
 
   // Clamp dependent fields when maxes change
   const clampedContributions = Math.min(totalContributions, cumulativeLimit);
-  const maxWithdrawalsBefore = clampedContributions;
+  const clampedPortfolio = Math.min(Math.max(portfolioValue, 0), portfolioCap);
+  // Withdrawals are bounded by the account's current value (which can exceed
+  // contributions thanks to growth), not by the amount contributed.
+  const maxWithdrawalsBefore = clampedPortfolio;
   const clampedWithdrawalsBefore = Math.min(
     withdrawalsBefore2026,
     maxWithdrawalsBefore
   );
-  const maxWithdrawalsIn2026 = clampedContributions - clampedWithdrawalsBefore;
+  const maxWithdrawalsIn2026 = clampedPortfolio - clampedWithdrawalsBefore;
   const clampedWithdrawalsIn2026 = Math.min(
     withdrawalsIn2026,
     maxWithdrawalsIn2026
@@ -82,13 +90,22 @@ export function TFSACalculator() {
     setMode(newMode);
     setYearValue(newMode === "birth" ? 1991 : CURRENT_YEAR);
     setTotalContributions(0);
+    setPortfolioValue(0);
+    setPortfolioCap(200000);
     setWithdrawalsBefore2026(0);
     setWithdrawalsIn2026(0);
   }
 
+  function bumpPortfolioCap() {
+    const next = portfolioCap + 200000;
+    setPortfolioCap(next);
+    toast(flexMessage(next));
+  }
+
   return (
-    <div className="space-y-8">
-      {isEligible ? (
+    <CalculatorShell
+      results={
+        isEligible ? (
         <ResultsHero
           eyebrow="TFSA · 2026"
           kicker="You can still contribute"
@@ -113,8 +130,8 @@ export function TFSACalculator() {
               value: formatCurrency(clampedContributions),
             },
             {
-              label: "Withdrawn before 2026",
-              value: formatCurrency(clampedWithdrawalsBefore),
+              label: "Current value",
+              value: formatCurrency(clampedPortfolio),
             },
           ]}
         />
@@ -129,9 +146,10 @@ export function TFSACalculator() {
               : `Contribution room starts in the year you become a Canadian resident.`
           }
         />
-      )}
-
-      <Bezel className="rounded-[1.75rem]" innerClassName="rounded-[1.4rem] p-6 sm:p-7">
+        )
+      }
+      inputs={
+        <Bezel className="rounded-[1.75rem]" innerClassName="rounded-[1.4rem] p-6 sm:p-7">
         <div className="space-y-6">
           {/* Mode selector */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -212,10 +230,21 @@ export function TFSACalculator() {
                 onChange={setTotalContributions}
               />
               <RangeField
+                id="portfolio-value"
+                label="What is your TFSA worth today?"
+                subtitle="Include growth — withdrawing the full value restores that much room next year."
+                value={clampedPortfolio}
+                max={portfolioCap}
+                step={1000}
+                onBumpMax={bumpPortfolioCap}
+                onChange={setPortfolioValue}
+              />
+              <RangeField
                 id="withdrawals-before"
                 label={`How much have you withdrawn from your TFSA before ${CURRENT_YEAR}?`}
                 value={clampedWithdrawalsBefore}
                 max={maxWithdrawalsBefore}
+                disabledHint="Enter what your TFSA is worth today first."
                 onChange={setWithdrawalsBefore2026}
               />
               <RangeField
@@ -223,12 +252,14 @@ export function TFSACalculator() {
                 label={`How much have you withdrawn from your TFSA in ${CURRENT_YEAR}?`}
                 value={clampedWithdrawalsIn2026}
                 max={maxWithdrawalsIn2026}
+                disabledHint="Enter what your TFSA is worth today first."
                 onChange={setWithdrawalsIn2026}
               />
             </>
           )}
         </div>
-      </Bezel>
-    </div>
+        </Bezel>
+      }
+    />
   );
 }

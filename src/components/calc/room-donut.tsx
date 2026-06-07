@@ -15,7 +15,7 @@ export function RoomDonut({
   const r = 52;
   const c = 2 * Math.PI * r;
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center justify-between gap-4">
       <div className="relative h-[120px] w-[120px] shrink-0">
         <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
           <circle cx="60" cy="60" r={r} fill="none" stroke="var(--paper)" strokeWidth="14" />
@@ -36,11 +36,11 @@ export function RoomDonut({
           {Math.round(pct * 100)}%
         </span>
       </div>
-      <div>
+      <div className="pr-2 text-right">
         <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-espresso/55">
           {label}
         </p>
-        <p className="mt-1 font-[family-name:var(--font-display)] text-lg font-semibold text-espresso tabular-nums">
+        <p className="mt-1 font-[family-name:var(--font-display)] text-xl font-semibold text-espresso tabular-nums">
           {centerValue}
         </p>
       </div>

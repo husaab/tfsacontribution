@@ -13,6 +13,7 @@ import { ResultsHero } from "@/components/calc/results-hero";
 import { RoomDonut } from "@/components/calc/room-donut";
 import { RangeField } from "@/components/calc/range-field";
 import { Bezel } from "@/components/calc/bezel";
+import { CalculatorShell } from "@/components/calc/calculator-shell";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import {
   calculateRRSP,
@@ -50,8 +51,9 @@ export function RRSPCalculator() {
   const hasResults = income > 0 && rrspRoom > 0;
 
   return (
-    <div className="space-y-8">
-      {hasResults ? (
+    <CalculatorShell
+      results={
+        hasResults ? (
         <ResultsHero
           eyebrow={`RRSP · ${taxYear}`}
           kicker="Your optimal contribution"
@@ -89,9 +91,10 @@ export function RRSPCalculator() {
           state="empty"
           notice="Enter your income and RRSP room below to see your optimization results, powered by your Marginal Effective Tax Rate (METR)."
         />
-      )}
-
-      <Bezel className="rounded-[1.75rem]" innerClassName="rounded-[1.4rem] p-6 sm:p-7">
+        )
+      }
+      inputs={
+        <Bezel className="rounded-[1.75rem]" innerClassName="rounded-[1.4rem] p-6 sm:p-7">
         <div className="space-y-6">
           <p className="text-sm leading-relaxed text-espresso/60">
             This calculator uses your Marginal Effective Tax Rate (METR), which
@@ -233,10 +236,10 @@ export function RRSPCalculator() {
             />
           )}
         </div>
-      </Bezel>
-
-      {/* METR breakdown tables */}
-      {hasResults && (
+        </Bezel>
+      }
+      below={
+        hasResults && (
         <div className="space-y-6">
           <Bezel
             className="rounded-[1.75rem]"
@@ -366,7 +369,8 @@ export function RRSPCalculator() {
             </Bezel>
           )}
         </div>
-      )}
-    </div>
+        )
+      }
+    />
   );
 }

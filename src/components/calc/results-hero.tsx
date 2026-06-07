@@ -36,14 +36,12 @@ export function ResultsHero({
     <div
       ref={ref}
       className={cn(
-        // Mobile reveal is opacity-only (a transform would break the sticky child below).
-        // Desktop gets the richer translate + blur reveal.
+        // Stickiness lives on the column wrapper (CalculatorShell). Keep the mobile
+        // reveal opacity-only and the desktop reveal as translate + blur.
         "transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
         shown
           ? "opacity-100 md:translate-y-0 md:blur-0"
-          : "opacity-0 md:translate-y-8 md:blur-sm",
-        // On mobile, pin the summary to the top while the inputs scroll underneath.
-        state === "default" && "max-md:sticky max-md:top-20 max-md:z-20"
+          : "opacity-0 md:translate-y-8 md:blur-sm"
       )}
     >
       {state !== "default" ? (
@@ -74,37 +72,36 @@ export function ResultsHero({
             {context && <p className="mt-1 text-xs text-espresso/60">{context}</p>}
           </div>
 
-          {/* Desktop: full hero (figure + donut + stats) */}
+          {/* Desktop: sticky summary panel (figure + donut + stats stacked for the column) */}
           <div className="hidden md:block">
             <Eyebrow>{eyebrow}</Eyebrow>
-            <div className="mt-5 grid items-end gap-8 md:grid-cols-[1.35fr_0.9fr]">
-              <div>
-                {kicker && (
-                  <p className="font-[family-name:var(--font-display)] text-xl font-medium text-espresso">
-                    {kicker}
-                  </p>
-                )}
-                <p className="mt-1 font-[family-name:var(--font-display)] text-[clamp(3.5rem,12vw,6.5rem)] font-semibold leading-[0.86] tracking-[-0.03em] tabular-nums text-ink">
-                  {figure}
+            <div className="mt-5">
+              {kicker && (
+                <p className="font-[family-name:var(--font-display)] text-lg font-medium text-espresso">
+                  {kicker}
                 </p>
-                {context && (
-                  <p className="mt-3 flex items-center gap-3 text-sm text-espresso/60">
-                    <span>{context}</span>
-                    <span className="h-px flex-1 bg-gradient-to-r from-hairline to-transparent" />
-                  </p>
-                )}
-              </div>
-              {donut && (
-                <div className="rounded-[1.75rem] border border-white/60 bg-white/45 p-1.5 shadow-[0_20px_50px_-28px_rgba(90,55,25,0.45),inset_0_1px_1px_rgba(255,255,255,0.8)]">
-                  <div className="rounded-[1.4rem] bg-white px-5 py-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)]">
-                    {donut}
-                  </div>
-                </div>
+              )}
+              <p className="mt-1 font-[family-name:var(--font-display)] text-[clamp(2.5rem,4.5vw,4rem)] font-semibold leading-[0.92] tracking-[-0.03em] tabular-nums text-ink">
+                {figure}
+              </p>
+              {context && (
+                <p className="mt-3 flex items-center gap-3 text-sm text-espresso/60">
+                  <span>{context}</span>
+                  <span className="h-px flex-1 bg-gradient-to-r from-hairline to-transparent" />
+                </p>
               )}
             </div>
 
+            {donut && (
+              <div className="mt-6 w-full rounded-[1.75rem] border border-white/60 bg-white/45 p-1.5 shadow-[0_20px_50px_-28px_rgba(90,55,25,0.45),inset_0_1px_1px_rgba(255,255,255,0.8)]">
+                <div className="rounded-[1.4rem] bg-white px-6 py-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)]">
+                  {donut}
+                </div>
+              </div>
+            )}
+
             {stats.length > 0 && (
-              <div className="mt-7 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-6 grid gap-3.5">
                 {stats.map((s) => (
                   <StatCard key={s.label} {...s} />
                 ))}
