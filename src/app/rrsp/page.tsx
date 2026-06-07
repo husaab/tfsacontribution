@@ -10,23 +10,11 @@ export const metadata: Metadata = {
 
 export default function RRSPPage() {
   return (
-    <div className="space-y-10">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          RRSP Contribution Optimizer
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          An RRSP Calculator giving Canadians new insights to make better RRSP
-          contribution decisions. Instead of using only income tax rates, this
-          calculator uses your Marginal Effective Tax Rate (METR), which
-          includes the impact of government benefits and tax credits.
-        </p>
-      </div>
-
+    <div className="space-y-14">
       <RRSPCalculator />
 
       <section>
-        <h2 className="mb-6 text-2xl font-semibold tracking-tight">
+        <h2 className="mb-6 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-espresso">
           Understanding RRSPs and METR
         </h2>
         <RRSPEducation />
