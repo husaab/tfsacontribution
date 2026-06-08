@@ -2,6 +2,8 @@
 
 import { Eyebrow } from "./eyebrow";
 import { StatCard } from "./stat-card";
+import { ExportButton } from "./export-button";
+import type { RecapData } from "./recap-card";
 import { useReveal } from "@/hooks/use-reveal";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +23,7 @@ export function ResultsHero({
   stats = [],
   state = "default",
   notice,
+  recap,
 }: {
   eyebrow: string;
   kicker?: string;
@@ -30,6 +33,7 @@ export function ResultsHero({
   stats?: HeroStat[];
   state?: "default" | "ineligible" | "empty";
   notice?: string;
+  recap?: RecapData;
 }) {
   const { ref, shown } = useReveal<HTMLDivElement>();
   return (
@@ -60,7 +64,10 @@ export function ResultsHero({
         <>
           {/* Mobile: compact sticky summary card */}
           <div className="rounded-[1.5rem] border border-hairline bg-cream/90 px-5 py-4 shadow-[0_16px_36px_-22px_rgba(90,55,25,0.55)] backdrop-blur-md md:hidden">
-            <Eyebrow>{eyebrow}</Eyebrow>
+            <div className="flex items-center justify-between gap-3">
+              <Eyebrow>{eyebrow}</Eyebrow>
+              {recap && <ExportButton recap={recap} variant="icon" />}
+            </div>
             {kicker && (
               <p className="mt-2 font-[family-name:var(--font-display)] text-sm font-medium text-espresso/80">
                 {kicker}
@@ -105,6 +112,12 @@ export function ResultsHero({
                 {stats.map((s) => (
                   <StatCard key={s.label} {...s} />
                 ))}
+              </div>
+            )}
+
+            {recap && (
+              <div className="mt-5">
+                <ExportButton recap={recap} variant="full" />
               </div>
             )}
           </div>

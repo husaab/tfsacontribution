@@ -134,6 +134,30 @@ export function TFSACalculator() {
               value: formatCurrency(clampedPortfolio),
             },
           ]}
+          recap={{
+            eyebrow: "TFSA · 2026",
+            kicker: "You can still contribute",
+            figure: formatCurrency(result.room2026),
+            context: `of your ${formatCurrency(cumulativeLimit)} cumulative room`,
+            pct: cumulativeLimit > 0 ? clampedContributions / cumulativeLimit : 0,
+            pctLabel: "room used",
+            stats: [
+              {
+                label: "Projected · 2027",
+                value: formatCurrency(result.room2027),
+                accent: true,
+              },
+              {
+                label: "Contributed to date",
+                value: formatCurrency(clampedContributions),
+              },
+              {
+                label: "Current value",
+                value: formatCurrency(clampedPortfolio),
+              },
+            ],
+            filename: "tfsa-contribution-room",
+          }}
         />
       ) : (
         <ResultsHero

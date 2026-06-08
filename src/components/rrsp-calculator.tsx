@@ -83,6 +83,30 @@ export function RRSPCalculator() {
               value: formatCurrency(result.totalBenefitIncrease),
             },
           ]}
+          recap={{
+            eyebrow: `RRSP · ${taxYear}`,
+            kicker: "Your optimal contribution",
+            figure: formatCurrency(result.maxContribution),
+            context: "limited by your RRSP room",
+            pct: rrspRoom > 0 ? result.maxContribution / rrspRoom : 0,
+            pctLabel: "room used",
+            stats: [
+              {
+                label: "Total net benefit",
+                value: formatCurrency(result.totalNetBenefit),
+                accent: true,
+              },
+              {
+                label: "Tax savings",
+                value: formatCurrency(result.totalTaxSavings),
+              },
+              {
+                label: "Benefit increase",
+                value: formatCurrency(result.totalBenefitIncrease),
+              },
+            ],
+            filename: "rrsp-optimal-contribution",
+          }}
         />
       ) : (
         <ResultsHero

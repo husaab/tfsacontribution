@@ -99,6 +99,33 @@ export function FHSACalculator() {
             value: formatCurrency(taxFreeGrowth),
           },
         ]}
+        recap={{
+          eyebrow: "FHSA · 2026",
+          kicker: "You can still contribute",
+          figure: formatCurrency(result.remainingRoom),
+          context: "of your $40,000 lifetime limit",
+          pct:
+            FHSA_LIFETIME_LIMIT > 0
+              ? result.lifetimeContributions / FHSA_LIFETIME_LIMIT
+              : 0,
+          pctLabel: "lifetime used",
+          stats: [
+            {
+              label: "Projected · 2027",
+              value: formatCurrency(result.projectedRoomNextYear),
+              accent: true,
+            },
+            {
+              label: "Lifetime contributed",
+              value: formatCurrency(result.lifetimeContributions),
+            },
+            {
+              label: "Tax-free growth",
+              value: formatCurrency(taxFreeGrowth),
+            },
+          ],
+          filename: "fhsa-contribution-room",
+        }}
       />
       }
       inputs={
