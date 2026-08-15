@@ -49,15 +49,20 @@ export function ResultsHero({
       )}
     >
       {state !== "default" ? (
-        <div className="max-w-2xl">
+        // The wrapper column is sticky on mobile, so this needs an opaque card
+        // backdrop (like the eligible compact card) or it pins transparently
+        // over the inputs while scrolling.
+        <div className="max-w-2xl rounded-[1.5rem] border border-hairline bg-cream/90 px-5 py-4 shadow-[0_16px_36px_-22px_rgba(90,55,25,0.55)] backdrop-blur-md md:rounded-none md:border-0 md:bg-transparent md:px-0 md:py-0 md:shadow-none md:backdrop-blur-none">
           <Eyebrow>{eyebrow}</Eyebrow>
           {kicker && (
-            <p className="mt-5 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-ink">
+            <p className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-ink md:mt-5 md:text-3xl">
               {kicker}
             </p>
           )}
           {notice && (
-            <p className="mt-3 text-base leading-relaxed text-espresso/70">{notice}</p>
+            <p className="mt-2 text-sm leading-relaxed text-espresso/70 md:mt-3 md:text-base">
+              {notice}
+            </p>
           )}
         </div>
       ) : (

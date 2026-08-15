@@ -31,6 +31,9 @@ import {
 export function TFSACalculator() {
   const [mode, setMode] = useState<TFSAMode>("birth");
   const [yearValue, setYearValue] = useState(1991);
+  // Free-typing buffer for the year field: clamping on every keystroke made it
+  // impossible to type a year (e.g. "1" snapped to 1900). Clamp on blur/Enter.
+  const [yearDraft, setYearDraft] = useState<string | null>(null);
   const [totalContributions, setTotalContributions] = useState(0);
   const [portfolioValue, setPortfolioValue] = useState(0);
   const [portfolioCap, setPortfolioCap] = useState(200000);
@@ -86,9 +89,19 @@ export function TFSACalculator() {
   const yearMin = mode === "birth" ? 1900 : CURRENT_YEAR - 60;
   const yearMax = CURRENT_YEAR;
 
+  function commitYearDraft() {
+    if (yearDraft === null) return;
+    const parsed = parseInt(yearDraft, 10);
+    if (!isNaN(parsed)) {
+      setYearValue(Math.min(Math.max(parsed, yearMin), yearMax));
+    }
+    setYearDraft(null);
+  }
+
   function handleModeChange(newMode: TFSAMode) {
     setMode(newMode);
     setYearValue(newMode === "birth" ? 1991 : CURRENT_YEAR);
+    setYearDraft(null);
     setTotalContributions(0);
     setPortfolioValue(0);
     setPortfolioCap(200000);
@@ -206,7 +219,10 @@ export function TFSACalculator() {
                   max={yearMax}
                   step={1}
                   value={[yearValue]}
-                  onValueChange={([v]) => setYearValue(v)}
+                  onValueChange={([v]) => {
+                    setYearValue(v);
+                    setYearDraft(null);
+                  }}
                   className="[&_[data-slot=slider-track]]:h-2.5 [&_[data-slot=slider-track]]:bg-paper [&_[data-slot=slider-range]]:bg-gradient-to-r [&_[data-slot=slider-range]]:from-terra-deep [&_[data-slot=slider-range]]:to-terra [&_[data-slot=slider-thumb]]:size-6 [&_[data-slot=slider-thumb]]:border-hairline [&_[data-slot=slider-thumb]]:bg-white [&_[data-slot=slider-thumb]]:shadow-[0_4px_12px_-2px_rgba(110,65,25,0.4)]"
                 />
                 <div className="flex justify-between text-[11px] text-espresso/45">
@@ -217,14 +233,23 @@ export function TFSACalculator() {
               <Input
                 id="year-input"
                 type="number"
+                inputMode="numeric"
                 min={yearMin}
                 max={yearMax}
-                value={yearValue}
+                value={yearDraft ?? yearValue}
                 onChange={(e) => {
-                  const parsed = parseInt(e.target.value, 10);
-                  if (!isNaN(parsed)) {
-                    setYearValue(Math.min(Math.max(parsed, yearMin), yearMax));
+                  const raw = e.target.value;
+                  setYearDraft(raw);
+                  // Apply immediately once a valid in-range year is typed so
+                  // results update live without fighting partial input.
+                  const parsed = parseInt(raw, 10);
+                  if (!isNaN(parsed) && parsed >= yearMin && parsed <= yearMax) {
+                    setYearValue(parsed);
                   }
+                }}
+                onBlur={commitYearDraft}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commitYearDraft();
                 }}
                 className="w-24 text-right"
               />
